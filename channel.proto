@@ -50,46 +50,46 @@ option java_outer_classname = "ChannelProtos";
  */
 message ChannelSettings {
 
-  /*
+    /*
    * If zero then, use default max legal continuous power (ie. something that won't
    * burn out the radio hardware)
    * In most cases you should use zero here.
    * Units are in dBm.
    */
-  int32 tx_power = 1;
+    int32 tx_power = 1;
 
-  /*
+    /*
    * Standard predefined channel settings
    * Note: these mappings must match ModemConfigChoice in the device code.
    */
-  enum ModemConfig {
+    enum ModemConfig {
 
-    /*
+        /*
      * < Bw = 125 kHz, Cr = 4/5, Sf(7) = 128chips/symbol, CRC
      * < on. Default medium range (5.469 kbps)
      */
-    Bw125Cr45Sf128 = 0;
+        Bw125Cr45Sf128 = 0;
 
-    /*
+        /*
      * < Bw = 500 kHz, Cr = 4/5, Sf(7) = 128chips/symbol, CRC
      * < on. Fast+short range (21.875 kbps)
      */
-    Bw500Cr45Sf128 = 1;
+        Bw500Cr45Sf128 = 1;
 
-    /*
+        /*
      * < Bw = 31.25 kHz, Cr = 4/8, Sf(9) = 512chips/symbol,
      * < CRC on. Slow+long range (275 bps)
      */
-    Bw31_25Cr48Sf512 = 2;
+        Bw31_25Cr48Sf512 = 2;
 
-    /*
+        /*
      * < Bw = 125 kHz, Cr = 4/8, Sf(12) = 4096chips/symbol, CRC
      * < on. Slow+long range (183 bps)
      */
-    Bw125Cr48Sf4096 = 3;
-  }
+        Bw125Cr48Sf4096 = 3;
+    }
 
-  /*
+    /*
    * Note: This is the 'old' mechanism for specifying channel parameters.
    * Either modem_config or bandwidth/spreading/coding will be specified - NOT BOTH.
    * As a heuristic: If bandwidth is specified, do not use modem_config.
@@ -97,28 +97,28 @@ message ChannelSettings {
    * This value is replaced by bandwidth/spread_factor/coding_rate.
    * If you'd like to experiment with other options add them to MeshRadio.cpp in the device code.
    */
-  ModemConfig modem_config = 3;
+    ModemConfig modem_config = 3;
 
-  /*
+    /*
    * Bandwidth in MHz
    * Certain bandwidth numbers are 'special' and will be converted to the
    * appropriate floating point value: 31 -> 31.25MHz
    */
-  uint32 bandwidth = 6;
+    uint32 bandwidth = 6;
 
-  /*
+    /*
    * A number from 7 to 12.
    * Indicates number of chirps per symbol as 1<<spread_factor.
    */
-  uint32 spread_factor = 7;
+    uint32 spread_factor = 7;
 
-  /*
+    /*
    * The denominator of the coding rate.
    * ie for 4/8, the value is 8. 5/8 the value is 5.
    */
-  uint32 coding_rate = 8;
+    uint32 coding_rate = 8;
 
-  /*
+    /*
    * NOTE: this field is _independent_ and unrelated to the concepts in channel.proto.
    * this is controlling the actual hardware frequency the radio is transmitting on.
    * In a perfect world we would have called it something else (band?) but I forgot to make this change during the big 1.2 renaming.
@@ -138,9 +138,9 @@ message ChannelSettings {
    *   return hash;
    * }
    */
-  uint32 channel_num = 9;
+    uint32 channel_num = 9;
 
-  /*
+    /*
    * A simple pre-shared key for now for crypto.
    * Must be either 0 bytes (no crypto), 16 bytes (AES128), or 32 bytes (AES256).
    * A special shorthand is used for 1 byte long psks.
@@ -152,9 +152,9 @@ message ChannelSettings {
    * `2` through 10 = The default channel key, except with 1 through 9 added to the last byte.
    * Shown to user as simple1 through 10
    */
-  bytes psk = 4;
+    bytes psk = 4;
 
-  /*
+    /*
    * A SHORT name that will be packed into the URL.
    * Less than 12 bytes.
    * Something for end users to call the channel
@@ -164,9 +164,9 @@ message ChannelSettings {
    * For channel_num hashing empty string will be treated as "X".
    * Where "X" is selected based on the English words listed above for ModemConfig
    */
-  string name = 5;
+    string name = 5;
 
-  /*
+    /*
    * Used to construct a globally unique channel ID.
    * The full globally unique ID will be: "name.id" where ID is shown as base36.
    * Assuming that the number of meshtastic users is below 20K (true for a long time)
@@ -179,17 +179,17 @@ message ChannelSettings {
    * a table of well known IDs.
    * (see Well Known Channels FIXME)
    */
-  fixed32 id = 10;
+    fixed32 id = 10;
 
-  /*
+    /*
    * If true, messages on the mesh will be sent to the *public* internet by any gateway ndoe
    */
-  bool uplink_enabled = 16;
+    bool uplink_enabled = 16;
 
-  /*
+    /*
    * If true, messages seen on the internet will be forwarded to the local mesh.
    */
-  bool downlink_enabled = 17;
+    bool downlink_enabled = 17;
 }
 
 /*
@@ -197,7 +197,7 @@ message ChannelSettings {
  */
 message Channel {
 
-  /*
+    /*
    * How this channel is being used (or not).
    *
    * Note: this field is an enum to give us options for the future.
@@ -210,35 +210,35 @@ message Channel {
    * If a device has only a single radio (the common case) only one channel can be PRIMARY at a time
    * (but any number of SECONDARY channels can't be sent received on that common frequency)
    */
-  enum Role {
-    /*
+    enum Role {
+        /*
      * This channel is not in use right now
      */
-    DISABLED = 0;
+        DISABLED = 0;
 
-    /*
+        /*
      * This channel is used to set the frequency for the radio - all other enabled channels must be SECONDARY
      */
-    PRIMARY = 1;
+        PRIMARY = 1;
 
-    /*
+        /*
      * Secondary channels are only used for encryption/decryption/authentication purposes.
      * Their radio settings (freq etc) are ignored, only psk is used.
      */
-    SECONDARY = 2;
-  }
+        SECONDARY = 2;
+    }
 
-  /*
+    /*
    * The index of this channel in the channel table (from 0 to MAX_NUM_CHANNELS-1)
    * (Someday - not currently implemented) An index of -1 could be used to mean "set by name",
    * in which case the target node will find and set the channel by settings.name.
    */
-  int32 index = 1;
+    int32 index = 1;
 
-  /*
+    /*
    * The new settings, or NULL to disable that channel
    */
-  ChannelSettings settings = 2;
+    ChannelSettings settings = 2;
 
-  Role role = 3;
+    Role role = 3;
 }

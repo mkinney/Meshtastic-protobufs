@@ -16,3 +16,7 @@ lint:
     max_line_length:
       # Enforces a maximum line length
       max_chars: 180
+
+    indent:
+      # Available styles are 4(4-spaces), 2(2-spaces) or tab.
+      style: 4
